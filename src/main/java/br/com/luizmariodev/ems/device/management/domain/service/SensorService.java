@@ -28,29 +28,6 @@ public class SensorService {
         return convertEntityToOuput(sensor);
     }
 
-    public SensorOutput convertEntityToOuput(Sensor sensor) {
-        var response = new SensorOutput();
-        response.setId(sensor.getId().getValue());
-        response.setIp(sensor.getIp());
-        response.setLocation(sensor.getLocation());
-        response.setName(sensor.getName());
-        response.setProtocol(sensor.getProtocol());
-        response.setModel(sensor.getModel());
-        return response;
-    }
-
-    public Sensor convertInputToEntity(SensorInput sensorInput) {
-        var sensor = new Sensor();
-        sensor.setId(new SensorId(IdGenerator.generateTSID()));
-        sensor.setIp(sensorInput.getIp());
-        sensor.setName(sensorInput.getName());
-        sensor.setLocation(sensorInput.getLocation());
-        sensor.setProtocol(sensorInput.getProtocol());
-        sensor.setModel(sensorInput.getModel());
-        sensor.setEnabled(Boolean.FALSE);
-        return sensor;
-    }
-
     public SensorOutput findOne(TSID id) {
         var optionalSensor = repository.findById(new SensorId(id));
 
@@ -92,5 +69,53 @@ public class SensorService {
 
         var sensor = optionalSensor.get();
         repository.delete(sensor);
+    }
+
+    public void enable(TSID sensorId) {
+        var optionalSensor = repository.findById(new SensorId(sensorId));
+
+        if (!optionalSensor.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        var sensor = optionalSensor.get();
+        sensor.setEnabled(Boolean.TRUE);
+        repository.save(sensor);
+    }
+
+    public void disable(TSID sensorId) {
+        var optionalSensor = repository.findById(new SensorId(sensorId));
+
+        if (!optionalSensor.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        var sensor = optionalSensor.get();
+        sensor.setEnabled(Boolean.FALSE);
+        repository.save(sensor);
+    }
+
+    private SensorOutput convertEntityToOuput(Sensor sensor) {
+        var response = new SensorOutput();
+        response.setId(sensor.getId().getValue());
+        response.setIp(sensor.getIp());
+        response.setLocation(sensor.getLocation());
+        response.setName(sensor.getName());
+        response.setProtocol(sensor.getProtocol());
+        response.setModel(sensor.getModel());
+        response.setEnable(sensor.getEnabled());
+        return response;
+    }
+
+    private Sensor convertInputToEntity(SensorInput sensorInput) {
+        var sensor = new Sensor();
+        sensor.setId(new SensorId(IdGenerator.generateTSID()));
+        sensor.setIp(sensorInput.getIp());
+        sensor.setName(sensorInput.getName());
+        sensor.setLocation(sensorInput.getLocation());
+        sensor.setProtocol(sensorInput.getProtocol());
+        sensor.setModel(sensorInput.getModel());
+        sensor.setEnabled(Boolean.FALSE);
+        return sensor;
     }
 }

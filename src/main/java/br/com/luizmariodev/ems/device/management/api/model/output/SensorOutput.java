@@ -14,5 +14,6 @@ public class SensorOutput implements Serializable {
     private String model;
     private String location;
     private String ip;
+    private Boolean enable;
 
 }
