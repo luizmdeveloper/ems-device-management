@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,5 +47,11 @@ public class SensorController {
     @PutMapping("{sensorId}")
     public SensorOutput update(@PathVariable TSID sensorId, @RequestBody SensorInput sensorInput) {
         return service.update(sensorId, sensorInput);
+    }
+
+    @DeleteMapping("{sensorId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable TSID sensorId) {
+        service.delete(sensorId);
     }
 }

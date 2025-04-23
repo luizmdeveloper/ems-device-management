@@ -82,4 +82,15 @@ public class SensorService {
 
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
+
+    public void delete(TSID sensorId) {
+        var optionalSensor = repository.findById(new SensorId(sensorId));
+
+        if (!optionalSensor.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        var sensor = optionalSensor.get();
+        repository.delete(sensor);
+    }
 }
