@@ -7,11 +7,11 @@ import br.com.luizmariodev.ems.device.management.domain.model.Sensor;
 import br.com.luizmariodev.ems.device.management.domain.model.SensorId;
 import br.com.luizmariodev.ems.device.management.domain.repository.SensorRepository;
 import io.hypersistence.tsid.TSID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Optional;
 
 @Service
 public class SensorService {
@@ -56,6 +56,28 @@ public class SensorService {
 
         if (optionalSensor.isPresent()) {
             return convertEntityToOuput(optionalSensor.get());
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+    public Page<SensorOutput> findAll(Pageable pageable) {
+        var pages = repository.findAll(pageable);
+        return pages.map(this::convertEntityToOuput);
+    }
+
+    public SensorOutput update(TSID sensorId, SensorInput sensorInput) {
+        var optionalSensor = repository.findById(new SensorId(sensorId));
+
+        if (optionalSensor.isPresent()) {
+            var sensor = optionalSensor.get();
+            sensor.setIp(sensorInput.getIp());
+            sensor.setName(sensorInput.getName());
+            sensor.setModel(sensorInput.getModel());
+            sensor.setProtocol(sensorInput.getProtocol());
+            sensor.setLocation(sensorInput.getLocation());
+            repository.save(sensor);
+            return convertEntityToOuput(sensor);
         }
 
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
