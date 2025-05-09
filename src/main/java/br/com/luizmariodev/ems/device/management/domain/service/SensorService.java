@@ -1,5 +1,6 @@
 package br.com.luizmariodev.ems.device.management.domain.service;
 
+import br.com.luizmariodev.ems.device.management.api.client.SensorMonitoringClient;
 import br.com.luizmariodev.ems.device.management.api.model.input.SensorInput;
 import br.com.luizmariodev.ems.device.management.api.model.output.SensorOutput;
 import br.com.luizmariodev.ems.device.management.common.IdGenerator;
@@ -17,9 +18,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class SensorService {
 
     private final SensorRepository repository;
+    private final SensorMonitoringClient sensorMonitoringClient;
 
-    public SensorService(SensorRepository repository){
+    public SensorService(SensorRepository repository, SensorMonitoringClient sensorMonitoringClient){
         this.repository = repository;
+        this.sensorMonitoringClient = sensorMonitoringClient;
     }
 
     public SensorOutput save(SensorInput sensorInput) {
@@ -69,6 +72,7 @@ public class SensorService {
 
         var sensor = optionalSensor.get();
         repository.delete(sensor);
+        sensorMonitoringClient.disable(sensorId);
     }
 
     public void enable(TSID sensorId) {
@@ -81,6 +85,7 @@ public class SensorService {
         var sensor = optionalSensor.get();
         sensor.setEnabled(Boolean.TRUE);
         repository.save(sensor);
+        sensorMonitoringClient.enable(sensorId);
     }
 
     public void disable(TSID sensorId) {
@@ -93,6 +98,7 @@ public class SensorService {
         var sensor = optionalSensor.get();
         sensor.setEnabled(Boolean.FALSE);
         repository.save(sensor);
+        sensorMonitoringClient.disable(sensorId);
     }
 
     private SensorOutput convertEntityToOuput(Sensor sensor) {
