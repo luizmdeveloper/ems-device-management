@@ -4,10 +4,9 @@ import br.com.luizmariodev.ems.device.management.api.client.SensorMonitoringClie
 import br.com.luizmariodev.ems.device.management.api.client.factory.RestClientFactory;
 import br.com.luizmariodev.ems.device.management.api.model.output.SensorMonitoringOutput;
 import io.hypersistence.tsid.TSID;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-@Component
+// @Component
 public class SensorMonitoringRestClient implements SensorMonitoringClient {
 
     private final RestClient restClient;
