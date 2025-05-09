@@ -13,6 +13,7 @@ public class TSIDJacksonConfig {
     public Module module() {
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(TSID.class, new TSIDToStringSerializer());
+        simpleModule.addDeserializer(TSID.class, new StringToTSIDDeserializer());
         return simpleModule;
     }
 }

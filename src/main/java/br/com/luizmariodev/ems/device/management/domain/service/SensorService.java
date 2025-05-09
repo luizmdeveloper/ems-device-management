@@ -2,6 +2,7 @@ package br.com.luizmariodev.ems.device.management.domain.service;
 
 import br.com.luizmariodev.ems.device.management.api.client.SensorMonitoringClient;
 import br.com.luizmariodev.ems.device.management.api.model.input.SensorInput;
+import br.com.luizmariodev.ems.device.management.api.model.output.SensorDetailOutput;
 import br.com.luizmariodev.ems.device.management.api.model.output.SensorOutput;
 import br.com.luizmariodev.ems.device.management.common.IdGenerator;
 import br.com.luizmariodev.ems.device.management.domain.model.Sensor;
@@ -99,6 +100,17 @@ public class SensorService {
         sensor.setEnabled(Boolean.FALSE);
         repository.save(sensor);
         sensorMonitoringClient.disable(sensorId);
+    }
+
+
+    public SensorDetailOutput detail(TSID sensorId) {
+        var sensor = findOne(sensorId);
+        var monitoring = sensorMonitoringClient.detail(sensorId);
+        var sensorDetail = new SensorDetailOutput();
+        sensorDetail.setSensor(sensor);
+        sensorDetail.setMonitoring(monitoring);
+        return sensorDetail;
+
     }
 
     private SensorOutput convertEntityToOuput(Sensor sensor) {

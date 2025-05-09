@@ -2,6 +2,7 @@ package br.com.luizmariodev.ems.device.management.api.client.rest;
 
 import br.com.luizmariodev.ems.device.management.api.client.SensorMonitoringClient;
 import br.com.luizmariodev.ems.device.management.api.client.factory.RestClientFactory;
+import br.com.luizmariodev.ems.device.management.api.model.output.SensorMonitoringOutput;
 import io.hypersistence.tsid.TSID;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -29,5 +30,13 @@ public class SensorMonitoringRestClient implements SensorMonitoringClient {
                 .uri("/v1/sensors/{sensorId}/monitoring/enable", sensorId)
                 .retrieve()
                 .toBodilessEntity();
+    }
+
+    @Override
+    public SensorMonitoringOutput detail(TSID sensorId) {
+        return restClient.get()
+                .uri("/v1/sensors/{sensorId}/monitoring", sensorId)
+                .retrieve()
+                .body(SensorMonitoringOutput.class);
     }
 }

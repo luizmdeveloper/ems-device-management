@@ -1,6 +1,7 @@
 package br.com.luizmariodev.ems.device.management.api.controller;
 
 import br.com.luizmariodev.ems.device.management.api.model.input.SensorInput;
+import br.com.luizmariodev.ems.device.management.api.model.output.SensorDetailOutput;
 import br.com.luizmariodev.ems.device.management.api.model.output.SensorOutput;
 import br.com.luizmariodev.ems.device.management.domain.service.SensorService;
 import io.hypersistence.tsid.TSID;
@@ -38,6 +39,12 @@ public class SensorController {
     public SensorOutput findOne(@PathVariable TSID sensorId) {
         return service.findOne(sensorId);
     }
+
+    @GetMapping("{sensorId}/detail")
+    public SensorDetailOutput detail(@PathVariable TSID sensorId) {
+        return service.detail(sensorId);
+    }
+
 
     @GetMapping
     public Page<SensorOutput> findAll(@PageableDefault Pageable pageable) {
