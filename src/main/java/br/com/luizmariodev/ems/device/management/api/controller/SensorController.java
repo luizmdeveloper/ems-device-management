@@ -45,7 +45,6 @@ public class SensorController {
         return service.detail(sensorId);
     }
 
-
     @GetMapping
     public Page<SensorOutput> findAll(@PageableDefault Pageable pageable) {
         return service.findAll(pageable);
